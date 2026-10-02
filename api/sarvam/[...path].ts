@@ -1,4 +1,4 @@
-import { handleProxy, toWebResponse } from "../_lib/sarvam";
+import { handleProxy, toWebResponse } from "../_lib/sarvam.js";
 
 const PREFIX = "/api/sarvam/";
 
