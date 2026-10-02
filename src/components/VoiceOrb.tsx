@@ -8,86 +8,126 @@ interface Props {
 }
 
 /**
- * Decorative, animated voice indicator. Purely visual: the textual status
- * next to it (StatusBadge) is what screen readers announce.
+ * Kolam voice orb. Concentric dotted rings, drawn the way a kolam is laid
+ * out in rice flour, surround a glowing core. The rings turn and brighten
+ * with the live audio level. Purely decorative: StatusBadge carries the
+ * accessible state text.
  */
 export function VoiceOrb({ status, isMuted, levelRef }: Props) {
-  const coreRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const live = status === "listening" || status === "user_speaking" || status === "speaking";
 
-  // Drive the orb's scale from the live audio level without re-rendering React.
+  // Drive --level from the audio level without re-rendering React.
   useEffect(() => {
     if (!live) {
-      coreRef.current?.style.setProperty("--level", "0");
+      rootRef.current?.style.setProperty("--level", "0");
       return;
     }
     let frame = 0;
     let smoothed = 0;
     const tick = () => {
       const target = levelRef.current ?? 0;
-      smoothed += (target - smoothed) * 0.25;
-      coreRef.current?.style.setProperty("--level", smoothed.toFixed(3));
+      smoothed += (target - smoothed) * 0.22;
+      rootRef.current?.style.setProperty("--level", smoothed.toFixed(3));
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
   }, [live, levelRef]);
 
-  const ringColor =
+  const tone =
     status === "speaking"
-      ? "bg-saffron-400"
+      ? { ring: "#ffbe4d", core: "url(#coreSaffron)", glow: "rgba(245,166,35,0.45)" }
       : status === "user_speaking"
-        ? "bg-teal-400"
-        : "bg-white";
-
-  const gradient =
-    status === "speaking"
-      ? "from-saffron-400 via-saffron-500 to-saffron-600"
-      : status === "user_speaking"
-        ? "from-teal-400 via-teal-500 to-navy-600"
+        ? { ring: "#4ddbcd", core: "url(#coreTeal)", glow: "rgba(46,196,182,0.40)" }
         : status === "connecting"
-          ? "from-navy-600 via-navy-700 to-navy-800"
-          : "from-navy-600 via-navy-700 to-navy-900";
+          ? { ring: "#8da2c0", core: "url(#coreNavy)", glow: "rgba(141,162,192,0.25)" }
+          : { ring: "#8da2c0", core: "url(#coreNavy)", glow: "rgba(33,77,128,0.45)" };
 
   return (
     <div
+      ref={rootRef}
       aria-hidden="true"
-      className="relative grid h-56 w-56 place-items-center sm:h-64 sm:w-64"
+      className="relative grid h-64 w-64 place-items-center sm:h-72 sm:w-72"
       style={{ "--level": 0 } as React.CSSProperties}
     >
+      {/* Glow */}
+      <div
+        className="absolute inset-8 rounded-full blur-2xl transition-colors duration-700"
+        style={{
+          background: tone.glow,
+          transform: "scale(calc(1 + var(--level) * 0.35))",
+        }}
+      />
+
       {live && (
         <>
-          <span className={`absolute inset-6 rounded-full ${ringColor} opacity-30 animate-pulse-ring`} />
           <span
-            className={`absolute inset-6 rounded-full ${ringColor} opacity-30 animate-pulse-ring`}
-            style={{ animationDelay: "1.2s" }}
+            className="absolute inset-10 rounded-full border-2 animate-pulse-ring"
+            style={{ borderColor: tone.ring }}
+          />
+          <span
+            className="absolute inset-10 rounded-full border-2 animate-pulse-ring"
+            style={{ borderColor: tone.ring, animationDelay: "1.2s" }}
           />
         </>
       )}
 
-      {/* Outer glow */}
-      <span
-        className={`absolute inset-4 rounded-full bg-gradient-to-br ${gradient} opacity-40 blur-2xl transition-opacity duration-500`}
-      />
+      {/* Kolam rings */}
+      <svg viewBox="0 0 320 320" className="absolute inset-0 h-full w-full">
+        <defs>
+          <radialGradient id="coreNavy" cx="35%" cy="30%" r="80%">
+            <stop offset="0%" stopColor="#2a5d95" />
+            <stop offset="100%" stopColor="#0d2747" />
+          </radialGradient>
+          <radialGradient id="coreSaffron" cx="35%" cy="30%" r="80%">
+            <stop offset="0%" stopColor="#ffd07a" />
+            <stop offset="100%" stopColor="#d98c0f" />
+          </radialGradient>
+          <radialGradient id="coreTeal" cx="35%" cy="30%" r="80%">
+            <stop offset="0%" stopColor="#7fe8dd" />
+            <stop offset="100%" stopColor="#178f85" />
+          </radialGradient>
+        </defs>
 
-      {/* Core */}
-      <div
-        ref={coreRef}
-        className={`relative grid h-40 w-40 place-items-center rounded-full bg-gradient-to-br ${gradient} shadow-2xl shadow-black/50 ring-4 ring-white/10 transition-[background] duration-500 sm:h-44 sm:w-44 ${status === "idle" ? "animate-float" : ""}`}
-        style={{ transform: "scale(calc(1 + var(--level) * 0.18))" }}
-      >
+        <g
+          className={live ? "animate-turn" : ""}
+          style={{ transformOrigin: "160px 160px", opacity: "calc(0.6 + var(--level) * 0.4)" }}
+        >
+          <circle cx="160" cy="160" r="150" fill="none" stroke={tone.ring} strokeWidth="2.2"
+            strokeLinecap="round" strokeDasharray="0 15.7" className="transition-colors duration-700" />
+          <circle cx="160" cy="160" r="128" fill="none" stroke={tone.ring} strokeWidth="2.6"
+            strokeLinecap="round" strokeDasharray="0 20.1" className="transition-colors duration-700" />
+        </g>
+        <g
+          className={live ? "animate-turn-reverse" : ""}
+          style={{ transformOrigin: "160px 160px", opacity: "calc(0.5 + var(--level) * 0.5)" }}
+        >
+          <circle cx="160" cy="160" r="106" fill="none" stroke={tone.ring} strokeWidth="3"
+            strokeLinecap="round" strokeDasharray="0 27.7" className="transition-colors duration-700" />
+          <circle cx="160" cy="160" r="86" fill="none" stroke={tone.ring} strokeWidth="1.5"
+            strokeDasharray="4 8" opacity="0.6" className="transition-colors duration-700" />
+        </g>
+
+        {/* Core */}
+        <g style={{ transformOrigin: "160px 160px", transform: "scale(calc(1 + var(--level) * 0.14))" }}
+          className={status === "idle" ? "animate-breathe" : ""}>
+          <circle cx="160" cy="160" r="64" fill={tone.core} className="transition-all duration-700" />
+          <circle cx="160" cy="160" r="64" fill="none" stroke="rgba(248,241,228,0.18)" strokeWidth="1.5" />
+        </g>
+      </svg>
+
+      {/* Icon layer */}
+      <div className="relative grid h-32 w-32 place-items-center">
         {status === "connecting" && (
-          <span className="h-16 w-16 rounded-full border-4 border-white/20 border-t-white animate-spin" />
+          <span className="h-14 w-14 rounded-full border-4 border-cream-100/20 border-t-cream-100 animate-spin" />
         )}
-
         {status === "speaking" && <WaveBars />}
-
         {(status === "listening" || status === "user_speaking") && (
-          <MicIcon muted={isMuted} className="h-16 w-16 text-white drop-shadow" />
+          <MicIcon muted={isMuted} className="h-14 w-14 text-cream-100 drop-shadow-lg" />
         )}
-
         {(status === "idle" || status === "ended") && (
-          <MicIcon muted={false} className="h-16 w-16 text-white/90" />
+          <MicIcon muted={false} className="h-14 w-14 text-cream-100/90" />
         )}
       </div>
     </div>
@@ -96,11 +136,11 @@ export function VoiceOrb({ status, isMuted, levelRef }: Props) {
 
 function WaveBars() {
   return (
-    <div className="flex h-16 items-center gap-1.5">
+    <div className="flex h-14 items-center gap-1.5">
       {[0, 1, 2, 3, 4].map((i) => (
         <span
           key={i}
-          className="wave-bar block h-14 w-2.5 rounded-full bg-navy-950/80"
+          className="wave-bar block h-12 w-2.5 rounded-full bg-navy-950/80"
           style={{ animationDelay: `${i * 0.12}s` }}
         />
       ))}

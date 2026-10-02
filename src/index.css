@@ -2,13 +2,17 @@
 
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-tamil: "Noto Sans Tamil", "Plus Jakarta Sans", system-ui, sans-serif;
 
-  --color-navy-950: #060f1f;
-  --color-navy-900: #0b1f3a;
-  --color-navy-800: #12294b;
-  --color-navy-700: #1b365d;
-  --color-navy-600: #27497a;
+  /* LoanKart palette: deep night navy, kolam saffron, temple-pond teal, rice-flour cream. */
+  --color-navy-950: #040f21;
+  --color-navy-900: #071a33;
+  --color-navy-800: #0d2747;
+  --color-navy-700: #163a63;
+  --color-navy-600: #214d80;
 
+  --color-saffron-300: #ffd07a;
   --color-saffron-400: #ffbe4d;
   --color-saffron-500: #f5a623;
   --color-saffron-600: #d98c0f;
@@ -16,19 +20,35 @@
   --color-teal-400: #4ddbcd;
   --color-teal-500: #2ec4b6;
 
+  --color-cream-100: #f8f1e4;
+  --color-cream-300: #e3d6bf;
+  --color-slate-400: #8da2c0;
+
   --color-coral-500: #ff6b6b;
 
+  --animate-rise: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-breathe: breathe 5s ease-in-out infinite;
+  --animate-turn: turn 40s linear infinite;
+  --animate-turn-reverse: turn-reverse 60s linear infinite;
   --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-spin-slow: spin 3s linear infinite;
 
-  @keyframes pulse-ring {
-    0% { transform: scale(0.9); opacity: 0.55; }
-    100% { transform: scale(1.6); opacity: 0; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.035); }
+  }
+  @keyframes turn {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes turn-reverse {
+    to { transform: rotate(-360deg); }
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(0.92); opacity: 0.5; }
+    100% { transform: scale(1.45); opacity: 0; }
   }
 }
 
@@ -39,10 +59,20 @@ html, body, #root {
 body {
   margin: 0;
   background-color: var(--color-navy-950);
-  color: white;
+  color: var(--color-cream-100);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* Kolam dot-grid backdrop: rice-flour dots on the night ground. */
+.kolam-ground {
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(33, 77, 128, 0.55), transparent 55%),
+    radial-gradient(circle at 85% 90%, rgba(245, 166, 35, 0.14), transparent 45%),
+    radial-gradient(circle at 10% 85%, rgba(46, 196, 182, 0.10), transparent 40%),
+    radial-gradient(rgba(248, 241, 228, 0.07) 1px, transparent 1.5px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px;
 }
 
 /* Visible keyboard focus everywhere, never colour alone. */
@@ -60,6 +90,14 @@ body {
   0%, 100% { transform: scaleY(0.35); }
   50% { transform: scaleY(1); }
 }
+
+/* Page-load stagger. */
+.rise { animation: var(--animate-rise); }
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.15s; }
+.rise-3 { animation-delay: 0.25s; }
+.rise-4 { animation-delay: 0.35s; }
+.rise-5 { animation-delay: 0.45s; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

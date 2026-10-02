@@ -17,7 +17,7 @@ export function Controls({ status, isMuted, onStart, onEnd, onToggleMute }: Prop
       <button
         type="button"
         onClick={onStart}
-        className={`${base} w-full max-w-xs bg-gradient-to-r from-saffron-400 to-saffron-500 text-navy-950 shadow-lg shadow-saffron-500/30 hover:from-saffron-400 hover:to-saffron-400`}
+        className={`${base} w-full max-w-xs bg-gradient-to-r from-saffron-300 to-saffron-500 text-navy-950 shadow-[0_12px_40px_-10px_rgba(245,166,35,0.7)] hover:from-saffron-300 hover:to-saffron-400`}
       >
         <MicGlyph />
         {status === "ended" ? "Start a new conversation" : "Start Conversation"}
@@ -37,8 +37,8 @@ export function Controls({ status, isMuted, onStart, onEnd, onToggleMute }: Prop
         aria-label={isMuted ? "Unmute microphone" : "Mute microphone"}
         className={`${base} flex-1 border-2 ${
           isMuted
-            ? "border-coral-500 bg-coral-500/15 text-white"
-            : "border-white/25 bg-white/5 text-white hover:bg-white/10"
+            ? "border-coral-500 bg-coral-500/15 text-cream-100"
+            : "border-cream-100/25 bg-cream-100/5 text-cream-100 hover:bg-cream-100/10"
         }`}
       >
         <MicGlyph muted={isMuted} />
