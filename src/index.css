@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --color-navy-950: #060f1f;
+  --color-navy-900: #0b1f3a;
+  --color-navy-800: #12294b;
+  --color-navy-700: #1b365d;
+  --color-navy-600: #27497a;
+
+  --color-saffron-400: #ffbe4d;
+  --color-saffron-500: #f5a623;
+  --color-saffron-600: #d98c0f;
+
+  --color-teal-400: #4ddbcd;
+  --color-teal-500: #2ec4b6;
+
+  --color-coral-500: #ff6b6b;
+
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-spin-slow: spin 3s linear infinite;
+
+  @keyframes pulse-ring {
+    0% { transform: scale(0.9); opacity: 0.55; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-navy-950);
+  color: white;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Visible keyboard focus everywhere, never colour alone. */
+:focus-visible {
+  outline: 3px solid var(--color-saffron-400);
+  outline-offset: 3px;
+}
+
+/* Sound-wave bars used inside the orb. */
+.wave-bar {
+  transform-origin: center;
+  animation: wave 1s ease-in-out infinite;
+}
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
