@@ -215,7 +215,7 @@ loan-kart-voice-demo/
 ├── api/
 │   ├── _lib/sarvam.ts          # proxy + config logic (only place that reads SARVAM_API_KEY)
 │   ├── config.ts               # GET /api/config  -> public agent IDs
-│   └── sarvam/[...path].ts     # GET /api/sarvam/* -> Sarvam signed-URL endpoint, key injected
+│   └── sarvam-proxy.mjs        # GET /api/sarvam/* (vercel.json rewrite) -> Sarvam, key injected
 ├── public/favicon.svg
 ├── src/
 │   ├── components/             # Header, VoiceOrb, StatusBadge, Controls, ErrorBanner, Footer
