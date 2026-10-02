@@ -89,7 +89,7 @@ crashing, and the server logs which variables are missing.
 3. Under **Environment Variables** add the four `SARVAM_*` values from section 4
    (and optionally `SARVAM_APP_VERSION`). Apply them to Production and Preview.
 4. Click **Deploy**. Vercel builds the UI and automatically turns `api/config.mjs` and
-   `api/sarvam/[...path].mjs` into serverless functions.
+   `api/sarvam-proxy.mjs` into serverless functions.
 5. Open the deployment URL (`https://<project>.vercel.app`) and click **Start Conversation**.
 
 ### Option B – Vercel CLI
