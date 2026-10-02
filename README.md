@@ -67,7 +67,7 @@ settings in production. Never commit `.env`.
 
 | Variable              | Required | Secret | Where it is used                                      |
 | --------------------- | -------- | ------ | ----------------------------------------------------- |
-| `SARVAM_API_KEY`      | yes      | **yes**| `api/_lib/sarvam.ts` – injected as `X-API-Key` header |
+| `SARVAM_API_KEY`      | yes      | **yes**| `api/_lib/sarvam.mjs` – injected as `X-API-Key` header |
 | `SARVAM_ORG_ID`       | yes      | no     | returned by `/api/config`; proxy is locked to it      |
 | `SARVAM_WORKSPACE_ID` | yes      | no     | returned by `/api/config`; proxy is locked to it      |
 | `SARVAM_APP_ID`       | yes      | no     | returned by `/api/config`; proxy is locked to it      |
@@ -88,8 +88,8 @@ crashing, and the server logs which variables are missing.
    Framework preset: **Vite** (auto-detected). Build command `npm run build`, output `dist`.
 3. Under **Environment Variables** add the four `SARVAM_*` values from section 4
    (and optionally `SARVAM_APP_VERSION`). Apply them to Production and Preview.
-4. Click **Deploy**. Vercel builds the UI and automatically turns `api/config.ts` and
-   `api/sarvam/[...path].ts` into serverless functions.
+4. Click **Deploy**. Vercel builds the UI and automatically turns `api/config.mjs` and
+   `api/sarvam/[...path].mjs` into serverless functions.
 5. Open the deployment URL (`https://<project>.vercel.app`) and click **Start Conversation**.
 
 ### Option B – Vercel CLI
@@ -148,7 +148,7 @@ Nothing about the agent (prompt, voice, languages, flows) is defined here. To ch
 behaviour, edit and **commit** the agent in the Sarvam dashboard; the website picks up the latest
 committed version automatically on the next conversation.
 
-The proxy (`api/_lib/sarvam.ts`) only forwards
+The proxy (`api/_lib/sarvam.mjs`) only forwards
 `GET orgs/<org>/workspaces/<workspace>/apps/<app>/url` and refuses any other path or any IDs
 that differ from the configured ones, so the key cannot be used to reach other agents.
 

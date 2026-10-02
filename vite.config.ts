@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { handleConfig, handleProxy, missingServerConfig } from "./api/_lib/sarvam.ts";
+import { handleConfig, handleProxy, missingServerConfig } from "./api/_lib/sarvam.mjs";
 
 /**
  * Local-development stand-in for the Vercel functions in /api.
